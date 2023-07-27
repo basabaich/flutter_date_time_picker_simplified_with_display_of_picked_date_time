@@ -1,6 +1,10 @@
 //new_processs.dart
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // We are calling this to display the picked
+//date in the right format. we will call formatter variable below.
+
+final formatter = DateFormat.yMd(); //This is the format for display
 
 class NewProcess extends StatefulWidget {
   const NewProcess({super.key});
@@ -13,6 +17,12 @@ class NewProcess extends StatefulWidget {
 class _NewProcessState extends State<NewProcess> {
   //
   //
+  //Define a variable as below:
+  DateTime? _selectedDate;
+  //The above variable is a "DateTime" variable & the questionmark means
+  //in case the "_selectedDate" dont have the value or returns a null value
+  //then the returned value will be null otherwise the specific date will be
+  //shown
   //
   //The "showDatePicker()" uses a "Future". Which means that this function
   //will pick a date time value once the user clicks on the calender in future
@@ -34,7 +44,13 @@ class _NewProcessState extends State<NewProcess> {
         initialDate: now,
         firstDate: firstDate,
         lastDate: now);
-    print(pickedDate);
+    //print(pickedDate);
+    //Instead of the print command we can show the picked date in the
+    //application itself just before the DatePicker icon with the
+    //"setState()" function as below:
+    setState(() {
+      _selectedDate = pickedDate;
+    });
   }
 
   //
@@ -43,14 +59,24 @@ class _NewProcessState extends State<NewProcess> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Showing Dropdown Menu'),
+        title: const Text('Showing Calender Entry'),
         elevation: 4,
         backgroundColor: Colors.amber[700],
       ), //AppBar
       body: Column(
         children: [
           //CALANDER codes:
-          const Text('Selected Dates'),
+          Text(_selectedDate == null
+              ? 'No date selected !'
+              : formatter.format(_selectedDate!)), //Text
+          //We are putting an exclamation mark after "_selectedDate()"
+          //function as otherwise it was reporting an error as the
+          //flutter thinks if this variable be "null". But we know that
+          // this value will not be null as we have defined
+          //"_selectedDate" value as :
+          //DateTime ? _selectedDate;
+          //So to force flutter that we know it will not report a null, we have
+          //to add an exclamation mark at the end.
           IconButton(
             onPressed: _presentDatePicker,
             icon: const Icon(
