@@ -1,7 +1,6 @@
 //new_processs.dart
 
 import 'package:flutter/material.dart';
-import './expense.dart';
 
 class NewProcess extends StatefulWidget {
   const NewProcess({super.key});
@@ -13,9 +12,31 @@ class NewProcess extends StatefulWidget {
 
 class _NewProcessState extends State<NewProcess> {
   //
-  //This will save the selected category by the user in the "_selectedCategory"
-  //variable. Also the initial category will be displayed as "Leisure"
-  Category _selectedCategory = Category.leisure;
+  //
+  //
+  //The "showDatePicker()" uses a "Future". Which means that this function
+  //will pick a date time value once the user clicks on the calender in future
+  //So, in this case we can use ".then((value) {})" after the function
+  //"showDatePicker()" like "showDatePicker(.....).then((value) {});"
+  //Or else, we can use "async" before the second braces and "await" before the
+  //"showDatePicker()" function as below.
+  //
+  //Also, when we use "await" in future type functions, we can access the
+  //final value which is picked by the user & change the below code lines as
+  //"final firstDate = DateTime(now.year - 1, now.month, now.day);"  ..line 1
+  //"final pickedDate = await showDatePicker(......"                 ..line 2
+  //
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    final pickedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+    print(pickedDate);
+  }
+
   //
   //
   @override
@@ -28,43 +49,14 @@ class _NewProcessState extends State<NewProcess> {
       ), //AppBar
       body: Column(
         children: [
-          // DROPDOWN codes:
-          DropdownButton(
-            value: _selectedCategory,
-            items: Category.values
-                .map(
-                  (category) => DropdownMenuItem(
-                    value: category,
-                    child: Text(
-                      category.name.toUpperCase(),
-                    ),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              //print(value);
-              //
-              //If value is null & user did not set a value to it,
-              //then it will return nothing - as per below code outside
-              //the "setState()" function.
-              if (value == null) {
-                return;
-                //NOTE: When we put 'return' in a fucntion and the vriable
-                //'value' is null, then no codes within this function
-                //i.e. wihtin "onChanged: () {}" function
-                //after 'return' code (i.e. the setState() code) will be
-                //executed.
-              }
-              setState(
-                () {
-                  _selectedCategory = value;
-                  //When the 'value' is not null, it will store the selected
-                  //category properties value in the variable
-                  //"_selectedCategory"
-                },
-              );
-            },
-          ), //DropdownButton
+          //CALANDER codes:
+          const Text('Selected Dates'),
+          IconButton(
+            onPressed: _presentDatePicker,
+            icon: const Icon(
+              Icons.calendar_month,
+            ), //Icon
+          ), //IconButton
         ],
       ), //Column
     ); //Scaffold
